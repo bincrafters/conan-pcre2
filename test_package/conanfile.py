@@ -13,7 +13,7 @@ class TestPackageConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         if self.settings.os == "Windows" and not self.options['pcre'].shared:
-            cmake.definitions['PCRE_STATIC'] = True
+            cmake.definitions['PCRE2_STATIC'] = True
         cmake.configure()
         cmake.build()
 

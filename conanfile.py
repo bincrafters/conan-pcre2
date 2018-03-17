@@ -7,9 +7,9 @@ import os
 
 
 class PCREConan(ConanFile):
-    name = "pcre"
-    version = "8.41"
-    url = "https://github.com/bincrafters/conan-pcre"
+    name = "pcre2"
+    version = "10.31"
+    url = "https://github.com/bincrafters/conan-pcre2"
     homepage = "https://www.pcre.org/"
     author = "Bincrafters <bincrafters@gmail.com>"
     description = "Perl Compatible Regular Expressions"
@@ -26,7 +26,7 @@ class PCREConan(ConanFile):
 
     def source(self):
         source_url = "https://ftp.pcre.org"
-        tools.get("{0}/pub/pcre/pcre-{1}.tar.gz".format(source_url, self.version))
+        tools.get("{0}/pub/pcre/pcre2-{1}.tar.gz".format(source_url, self.version))
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self.source_subfolder)
 
@@ -36,9 +36,9 @@ class PCREConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.definitions["PCRE_BUILD_TESTS"] = False
+        cmake.definitions["PCRE2_BUILD_TESTS"] = False
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
-            cmake.definitions["PCRE_STATIC_RUNTIME"] = not self.options.shared and "MT" in self.settings.compiler.runtime
+            cmake.definitions["PCRE2_STATIC_RUNTIME"] = not self.options.shared and "MT" in self.settings.compiler.runtime
         cmake.configure(build_folder=self.build_subfolder)
         cmake.build()
         cmake.install()
