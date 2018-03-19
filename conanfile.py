@@ -17,8 +17,8 @@ class PCREConan(ConanFile):
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
-    options = {"shared": [True, False], "with_bzip2": [True, False]}
-    default_options = ("shared=False", "with_bzip2=True")
+    options = {"shared": [True, False], "with_bzip2": [True, False], "build_pcre2_8": [True, False], "build_pcre2_16": [True, False], "build_pcre2_32": [True, False], "support_jit": [True, False]}
+    default_options = ("shared=False", "with_bzip2=True", "build_pcre2_8=True", "build_pcre2_16=True", "build_pcre2_32=True", "support_jit=True")
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
     requires = "zlib/1.2.11@conan/stable"
@@ -41,6 +41,11 @@ class PCREConan(ConanFile):
         cmake.definitions["PCRE2_BUILD_TESTS"] = False
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
             cmake.definitions["PCRE2_STATIC_RUNTIME"] = not self.options.shared and "MT" in self.settings.compiler.runtime
+        cmake.definitions["PCRE2_DEBUG"] = self.settings.build_type == "Debug"
+        cmake.definitions["PCRE2_BUILD_PCRE2_8"] = self.options.build_pcre2_8
+        cmake.definitions["PCRE2_BUILD_PCRE2_16"] = self.options.build_pcre2_16
+        cmake.definitions["PCRE2_BUILD_PCRE2_32"] = self.options.build_pcre2_32
+        cmake.definitions["PCRE2_SUPPORT_JIT"] = self.options.support_jit
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
 
