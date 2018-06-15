@@ -19,6 +19,7 @@ class PCREConan(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
     options = {
         "shared": [True, False],
+        "fPIC": [True, False],
         "with_bzip2": [True, False],
         "build_pcre2_8": [True, False],
         "build_pcre2_16": [True, False],
@@ -26,6 +27,7 @@ class PCREConan(ConanFile):
         "support_jit": [True, False]
     }
     default_options = ("shared=False",
+                       "fPIC=True",
                        "with_bzip2=True",
                        "build_pcre2_8=True",
                        "build_pcre2_16=True",
@@ -40,6 +42,10 @@ class PCREConan(ConanFile):
         tools.get("{0}/pub/pcre/pcre2-{1}.tar.gz".format(source_url, self.version))
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self.source_subfolder)
+
+    def config_options(self):
+        if self.settings.os == "Windows":
+            self.options.remove("fPIC")
 
     def configure(self):
         del self.settings.compiler.libcxx
