@@ -65,6 +65,7 @@ class PCREConan(ConanFile):
         cmake.definitions["PCRE2_BUILD_PCRE2_16"] = self.options.build_pcre2_16
         cmake.definitions["PCRE2_BUILD_PCRE2_32"] = self.options.build_pcre2_32
         cmake.definitions["PCRE2_SUPPORT_JIT"] = self.options.support_jit
+        cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
 
