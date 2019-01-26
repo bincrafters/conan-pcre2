@@ -12,7 +12,8 @@ class PCREConan(ConanFile):
     homepage = "https://www.pcre.org/"
     author = "Bincrafters <bincrafters@gmail.com>"
     description = "Perl Compatible Regular Expressions"
-    license = "BSD"
+    topics = "regex", "regexp", "regular expressions", "PCRE"
+    license = "BSD-3-Clause"
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
@@ -26,15 +27,10 @@ class PCREConan(ConanFile):
         "build_pcre2_32": [True, False],
         "support_jit": [True, False]
     }
-    default_options = ("shared=False",
-                       "fPIC=True",
-                       "with_bzip2=True",
-                       "build_pcre2_8=True",
-                       "build_pcre2_16=True",
-                       "build_pcre2_32=True",
-                       "support_jit=True")
-    source_subfolder = "source_subfolder"
-    build_subfolder = "build_subfolder"
+    default_options = {'shared': False, 'fPIC': True, 'with_bzip2': True, 'build_pcre2_8': True,
+                       'build_pcre2_16': True, 'build_pcre2_32': True, 'support_jit': True}
+    _source_subfolder = "source_subfolder"
+    _build_subfolder = "build_subfolder"
     requires = "zlib/1.2.11@conan/stable"
 
     def source(self):
@@ -42,7 +38,7 @@ class PCREConan(ConanFile):
         tools.get("{0}/pub/pcre/pcre2-{1}.tar.gz".format(source_url, self.version),
                   sha256="9ca9be72e1a04f22be308323caa8c06ebd0c51efe99ee11278186cafbc4fe3af")
         extracted_dir = self.name + "-" + self.version
-        os.rename(extracted_dir, self.source_subfolder)
+        os.rename(extracted_dir, self._source_subfolder)
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -55,7 +51,7 @@ class PCREConan(ConanFile):
         if self.options.with_bzip2:
             self.requires.add("bzip2/1.0.6@conan/stable")
 
-    def configure_cmake(self):
+    def _configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions["PCRE2_BUILD_TESTS"] = False
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
@@ -66,18 +62,18 @@ class PCREConan(ConanFile):
         cmake.definitions["PCRE2_BUILD_PCRE2_16"] = self.options.build_pcre2_16
         cmake.definitions["PCRE2_BUILD_PCRE2_32"] = self.options.build_pcre2_32
         cmake.definitions["PCRE2_SUPPORT_JIT"] = self.options.support_jit
-        cmake.configure(build_folder=self.build_subfolder)
+        cmake.configure(build_folder=self._build_subfolder)
         return cmake
 
     def build(self):
-        cmake = self.configure_cmake()
+        cmake = self._configure_cmake()
         cmake.build()
 
     def package(self):
-        cmake = self.configure_cmake()
+        cmake = self._configure_cmake()
         cmake.install()
         cmake.patch_config_paths()
-        self.copy(pattern="LICENCE", dst="licenses", src=self.source_subfolder)
+        self.copy(pattern="LICENCE", dst="licenses", src=self._source_subfolder)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
