@@ -7,7 +7,7 @@ import os
 
 class PCREConan(ConanFile):
     name = "pcre2"
-    version = "10.31"
+    version = "10.32"
     url = "https://github.com/bincrafters/conan-pcre2"
     homepage = "https://www.pcre.org/"
     author = "Bincrafters <bincrafters@gmail.com>"
@@ -39,7 +39,8 @@ class PCREConan(ConanFile):
 
     def source(self):
         source_url = "https://ftp.pcre.org"
-        tools.get("{0}/pub/pcre/pcre2-{1}.tar.gz".format(source_url, self.version))
+        tools.get("{0}/pub/pcre/pcre2-{1}.tar.gz".format(source_url, self.version),
+                  sha256="9ca9be72e1a04f22be308323caa8c06ebd0c51efe99ee11278186cafbc4fe3af")
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self.source_subfolder)
 
