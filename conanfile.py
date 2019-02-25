@@ -76,6 +76,12 @@ class PCREConan(ConanFile):
         self.copy(pattern="LICENCE", dst="licenses", src=self._source_subfolder)
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.libs = ["pcre2-posix"]
+        if self.options.build_pcre2_8:
+            self.cpp_info.libs.append("pcre2-8")
+        if self.options.build_pcre2_16:
+            self.cpp_info.libs.append("pcre2-16")
+        if self.options.build_pcre2_32:
+            self.cpp_info.libs.append("pcre2-32")
         if not self.options.shared:
             self.cpp_info.defines.append("PCRE2_STATIC")
