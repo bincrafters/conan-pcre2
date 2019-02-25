@@ -77,7 +77,7 @@ class PCREConan(ConanFile):
 
     def package_info(self):
         def library_name(library):
-            if self.settings.compiler == "Visual Studio" and self.settings.build_type == "Debug":
+            if self.settings.build_type == "Debug":
                 library += "d"
             if self.settings.compiler == "gcc" and self.settings.os == "Windows" and self.options.shared:
                 library += ".dll"
