@@ -49,7 +49,7 @@ class PCREConan(ConanFile):
 
     def requirements(self):
         if self.options.with_bzip2:
-            self.requires.add("bzip2/1.0.6@conan/stable")
+            self.requires.add("bzip2/1.0.8@conan/stable")
 
     def _configure_cmake(self):
         cmake = CMake(self)
